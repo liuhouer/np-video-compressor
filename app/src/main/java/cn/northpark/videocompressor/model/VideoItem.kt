@@ -1,6 +1,8 @@
 package cn.northpark.videocompressor.model
 
 import android.net.Uri
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 /**
@@ -14,10 +16,35 @@ data class VideoItem(
     val durationMs: Long,
     val width: Int,
     val height: Int,
-    val dateModified: Long,
+    val dateModified: Long, // 单位：秒 (自 1970-01-01)
+    val dateTaken: Long = 0L, // 单位：毫秒 (自 1970-01-01，相册首选展示时间)
+    val dateAdded: Long = 0L, // 单位：秒 (自 1970-01-01)
     val path: String? = null,
     var isSelected: Boolean = false
 ) {
+    /**
+     * 获取视频最真实有效的绝对时间戳 (毫秒)
+     * 优先采用拍摄时间 (dateTaken)，兜底使用修改时间 (dateModified * 1000) 或添加时间 (dateAdded * 1000)
+     */
+    val effectiveDateMs: Long
+        get() = when {
+            dateTaken > 0L -> dateTaken
+            dateModified > 0L -> dateModified * 1000L
+            dateAdded > 0L -> dateAdded * 1000L
+            else -> 0L
+        }
+
+    /**
+     * 格式化展示的日期文本，如 "2024-03-15 18:30"
+     */
+    val formattedDate: String
+        get() {
+            val ms = effectiveDateMs
+            if (ms <= 0L) return "未知日期"
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            return sdf.format(Date(ms))
+        }
+
     /**
      * 格式化文件大小 (B, KB, MB, GB)
      */
@@ -71,5 +98,5 @@ enum class SortType(val displayName: String) {
     SIZE_DESC("文件大小 (从大到小)"),
     SIZE_ASC("文件大小 (从小到大)"),
     DURATION_DESC("视频时长 (从长到短)"),
-    DATE_DESC("修改时间 (从新到旧)")
+    DATE_DESC("视频日期 (从新到旧)")
 }

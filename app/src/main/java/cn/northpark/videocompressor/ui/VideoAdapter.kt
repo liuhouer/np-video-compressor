@@ -102,6 +102,7 @@ class VideoAdapter(
             binding.tvSize.text = item.formattedSize
             binding.tvDuration.text = item.formattedDuration
             binding.tvResolution.text = item.resolutionText
+            binding.tvDate.text = "日期: ${item.formattedDate}"
             updateSelection(isSelected)
 
             // 加载视频缩略图

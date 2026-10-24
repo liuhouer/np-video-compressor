@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity() {
                     // 仅当压缩后文件确实更小时才覆盖替换，防止体积反弹
                     if (result.compressedSize < result.originalSize) {
                         progressBinding.tvStatusDesc.text = "转码成功，正在安全替换相册源视频..."
-                        val replaced = replacer.replaceOriginalVideo(video.uri, video.path, result.outputFile)
+                        val replaced = replacer.replaceOriginalVideo(video, result.outputFile)
                         if (replaced) {
                             totalCompressedBytes += result.compressedSize
                         } else {

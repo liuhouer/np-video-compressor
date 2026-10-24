@@ -10,6 +10,7 @@ import cn.northpark.videocompressor.model.SortType
 import cn.northpark.videocompressor.model.VideoItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 
 /**
  * 相册视频数据仓库
@@ -37,6 +38,8 @@ class VideoRepository(private val context: Context) {
                 MediaStore.Video.Media.WIDTH,
                 MediaStore.Video.Media.HEIGHT,
                 MediaStore.Video.Media.DATE_MODIFIED,
+                MediaStore.Video.Media.DATE_TAKEN,
+                MediaStore.Video.Media.DATE_ADDED,
                 MediaStore.Video.Media.DATA
             )
 
@@ -60,6 +63,8 @@ class VideoRepository(private val context: Context) {
                     val widthColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.WIDTH)
                     val heightColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.HEIGHT)
                     val dateModifiedColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_MODIFIED)
+                    val dateTakenColumn = cursor.getColumnIndex(MediaStore.Video.Media.DATE_TAKEN)
+                    val dateAddedColumn = cursor.getColumnIndex(MediaStore.Video.Media.DATE_ADDED)
                     val dataColumn = cursor.getColumnIndex(MediaStore.Video.Media.DATA)
 
                     while (cursor.moveToNext()) {
@@ -69,8 +74,32 @@ class VideoRepository(private val context: Context) {
                         val duration = cursor.getLong(durationColumn)
                         var width = cursor.getInt(widthColumn)
                         var height = cursor.getInt(heightColumn)
-                        val dateModified = cursor.getLong(dateModifiedColumn)
+                        var dateModified = cursor.getLong(dateModifiedColumn)
+                        var dateTaken = if (dateTakenColumn != -1) cursor.getLong(dateTakenColumn) else 0L
+                        val dateAdded = if (dateAddedColumn != -1) cursor.getLong(dateAddedColumn) else 0L
                         val path = if (dataColumn != -1) cursor.getString(dataColumn) else null
+
+                        // 严密的时间相互校验与兜底机制
+                        if (dateTaken <= 0L) {
+                            if (dateModified > 0L) {
+                                dateTaken = dateModified * 1000L
+                            } else if (dateAdded > 0L) {
+                                dateTaken = dateAdded * 1000L
+                            } else if (!path.isNullOrBlank()) {
+                                try {
+                                    val f = File(path)
+                                    if (f.exists()) dateTaken = f.lastModified()
+                                } catch (_: Exception) {
+                                }
+                            }
+                        }
+                        if (dateModified <= 0L) {
+                            if (dateTaken > 0L) {
+                                dateModified = dateTaken / 1000L
+                            } else if (dateAdded > 0L) {
+                                dateModified = dateAdded
+                            }
+                        }
 
                         val contentUri = ContentUris.withAppendedId(collection, id)
 
@@ -108,6 +137,8 @@ class VideoRepository(private val context: Context) {
                                 width = width,
                                 height = height,
                                 dateModified = dateModified,
+                                dateTaken = dateTaken,
+                                dateAdded = dateAdded,
                                 path = path
                             )
                         )
@@ -128,7 +159,7 @@ class VideoRepository(private val context: Context) {
             SortType.SIZE_DESC -> list.sortedByDescending { it.size }
             SortType.SIZE_ASC -> list.sortedBy { it.size }
             SortType.DURATION_DESC -> list.sortedByDescending { it.durationMs }
-            SortType.DATE_DESC -> list.sortedByDescending { it.dateModified }
+            SortType.DATE_DESC -> list.sortedByDescending { it.effectiveDateMs }
         }
     }
 }
