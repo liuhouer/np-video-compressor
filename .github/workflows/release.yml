@@ -32,13 +32,17 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleDebug --stacktrace
 
+      - name: List Output Files
+        run: ls -la app/build/outputs/apk/debug/
+
       - name: Create GitHub Release and Upload APK
         uses: softprops/action-gh-release@v2
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           files: app/build/outputs/apk/debug/np-video-compressor-*.apk
           name: 视频极客压缩 ${{ github.ref_name }}
           body: |
-            ### 视频极客压缩 (NP Video Compressor) ${{ github.ref_name }} 发布 🎉
+            ### 视频极客压缩 (NP Video Compressor) ${{ github.ref_name }} 🎉
 
             #### ✨ 核心特性：
             - **相册大视频排查**：读取全部相册视频，支持按文件大小降序排序。
