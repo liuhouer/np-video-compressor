@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">视频极客压缩</string>
+    <string name="sort_by">排序方式</string>
+    <string name="select_all">全选</string>
+    <string name="deselect_all">取消全选</string>
+    <string name="compress_and_replace">压缩并替换源视频</string>
+    <string name="selected_summary">已选 %1$d 个视频，共 %2$s</string>
+    <string name="permission_denied_tip">需要读取相册视频权限才能扫描视频并进行压缩</string>
+    <string name="grant_permission">授予权限</string>
+    <string name="no_videos_found">相册中未发现视频文件</string>
+</resources>

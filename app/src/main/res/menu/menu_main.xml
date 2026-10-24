@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_select_all"
+        android:title="@string/select_all"
+        android:icon="@android:drawable/checkbox_on_background"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_sort"
+        android:title="@string/sort_by"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/sort_size_desc"
+                android:title="按大小 (从大到小) ★" />
+            <item
+                android:id="@+id/sort_size_asc"
+                android:title="按大小 (从小到大)" />
+            <item
+                android:id="@+id/sort_duration_desc"
+                android:title="按时长 (从长到短)" />
+            <item
+                android:id="@+id/sort_date_desc"
+                android:title="按时间 (从新到旧)" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_about"
+        android:title="关于"
+        android:icon="@android:drawable/ic_menu_info_details"
+        app:showAsAction="never" />
+
+</menu>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#1E88E5</color>
+    <color name="primary_dark">#1565C0</color>
+    <color name="accent">#FF4081</color>
+    <color name="background_light">#F5F7FA</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="tag_resolution_bg">#E3F2FD</color>
+    <color name="tag_resolution_text">#1565C0</color>
+    <color name="tag_size_bg">#FFEBEE</color>
+    <color name="tag_size_text">#C62828</color>
+    <color name="divider">#EEEEEE</color>
+    <color name="success_color">#2E7D32</color>
+</resources>

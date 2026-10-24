@@ -1,0 +1,52 @@
+name: Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Create GitHub Release and Upload APK
+        uses: softprops/action-gh-release@v2
+        with:
+          files: app/build/outputs/apk/debug/np-video-compressor-*.apk
+          name: 视频极客压缩 ${{ github.ref_name }}
+          body: |
+            ### 视频极客压缩 (NP Video Compressor) ${{ github.ref_name }} 发布 🎉
+
+            #### ✨ 核心特性：
+            - **相册大视频排查**：读取全部相册视频，支持按文件大小降序排序。
+            - **100% 保持原分辨率**：保留视频原始宽高，绝不压扁或裁切画面。
+            - **HEVC 高效转码**：采用 H.265 编码智能压缩，体积缩减 60% ~ 80%。
+            - **原视频安全替换**：适配 Android 10/11/12/13/14+ 分区存储，自动替换源视频并同步相册。
+            - **防反向增肥保护**：压缩后若体积未减小，自动保留原文件。
+
+            #### 📦 安装包下载：
+            请在下方 Assets 中下载 `np-video-compressor-${{ github.ref_name }}.apk` 安装体验。
+          draft: false
+          prerelease: false
+          generate_release_notes: true

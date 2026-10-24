@@ -1,0 +1,65 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'cn.northpark.videocompressor'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "cn.northpark.videocompressor"
+        minSdk 24
+        targetSdk 34
+        versionCode 3
+        versionName "1.0.2"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+    }
+
+    // 自定义打包生成的 APK 文件名: np-video-compressor-版本号.apk
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "np-video-compressor-${variant.versionName}.apk"
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    // Kotlin 协程与生命周期
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.activity:activity-ktx:1.8.2'
+
+    // Glide 图片与视频首帧加载
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+
+    // AndroidX Media3 官方多媒体音视频处理与转码 (保持分辨率与高效编码)
+    implementation 'androidx.media3:media3-transformer:1.2.1'
+    implementation 'androidx.media3:media3-effect:1.2.1'
+    implementation 'androidx.media3:media3-common:1.2.1'
+}
