@@ -12,12 +12,9 @@
         android:padding="24dp">
 
         <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@drawable/bg_tag_resolution"
-            android:padding="12dp"
-            android:src="@drawable/ic_launcher_foreground"
-            app:tint="@color/primary" />
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/tvAboutAppName"
